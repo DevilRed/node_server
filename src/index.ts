@@ -21,7 +21,7 @@ app.use(express.json());
 /* app.get('/', (req, res) => {
 	res.json({"title": "hello there"});
 }); */
-app.use(require('./routes.js'));
+app.use(require('./routes.ts'));
 
 // start the server
 app.listen(3000, () => {
