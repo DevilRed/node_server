@@ -22,6 +22,7 @@ app.use(express.json());
 	res.json({"title": "hello there"});
 }); */
 app.use(require('./routes.ts'));
+app.use('/api/movies', require('./movies'));// set endpoint url from .use
 
 // start the server
 app.listen(3000, () => {
