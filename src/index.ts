@@ -3,7 +3,7 @@
 /*
 npm init - y
 npm i - D express morgan nodemon
-		(morgan is a middleware to allow to see request on the console, nodemon restat the server after a change)
+		(morgan is a middleware to allow to see request on the console, nodemon restart the server after a change)
 
 additional modules:
 * express-handlebars, is a template engine
@@ -14,29 +14,63 @@ additional modules:
 * bcryptjs, hash password
 * connect-flash, for flash messages
 
-from 7.30
+from 41.26
 */
+
 const express = require('express');
+const morgan = require('morgan');// allows to view request through the console
+const path = require('path');// package built-in in nodeJS
+const exphbs = require('express-handlebars');
+const methodOverride = require('method-override');// allow html form use other html verbs, PUT, DELETE
+const session = require('express-session');
+
+
+// server initializing
 const app = express();
-const morgan = require('morgan');
+require('./database');
 
-// config
+// SETTINGS
 app.set('port', process.env.PORT || 3000);
-app.set('json spaces', 2);
+app.set('views', path.join(__dirname, 'views'));// set views folder
 
-// middlewares
-app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: false}));
-app.use(express.json());
+// handlebars config
+app.engine('.hbs', exphbs({
+	defaultLayout: 'main',
+	layoutsDir: path.join(app.get('views'), 'layouts'),// set the layout folder relative to the views folder config, so that path.join do string concatenation: /views/layouts
+	partialsDir: path.join(app.get('views'), 'partials'),
+	extname: '.hbs'// set views file extension
+}));
 
-// routes
-/* app.get('/', (req, res) => {
-	res.json({"title": "hello there"});
-}); */
-app.use(require('./routes.ts'));
-app.use('/api/movies', require('./movies'));// set endpoint url from .use
+app.set('view engine', '.hbs');// set handlebars
 
-// start the server
-app.listen(3000, () => {
-	console.log(`server on port ${app.get('port')}`);
-})
+
+// MIDDLEWARES, function that are executed in the middle between server and response
+// urlencoded allows to use data coming from html forms
+app.use(express.urlencoded({extended: false}));
+app.use(methodOverride('_method'));
+app.use(session({
+	secret: 'mysecretapp',
+	resave: true,
+	saveUninitialized: true
+}));
+
+
+
+// GLOBAL VARIALBLES
+
+
+// ROUTES
+app.use(require('./routes/index'));
+app.use(require('./routes/notes'));
+app.use(require('./routes/users'));
+
+
+// STATIC FILES
+// __dirname is pointing to current dir
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+// SERVER LISTENING
+app.listen(app.get('port'), () => {
+	console.log('server on port ', app.get('port'));
+});
