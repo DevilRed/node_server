@@ -9,7 +9,10 @@
 					<p>
 						{{ description }}
 					</p>
-					<button class="btn btn-danger btn-block btn-sm">delete</button>
+					<form action="/notes/delete/{{ id }}?_method=DELETE" method="POST">
+						<input type="hidden" name="_method" value="DELETE">
+						<button class="btn btn-danger btn-block btn-sm" type="submit">Delete</button>
+					</form>
 				</div>
 			</div>
 		</div>
