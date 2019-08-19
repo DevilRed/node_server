@@ -14,7 +14,7 @@ additional modules:
 * bcryptjs, hash password
 * connect-flash, for flash messages
 
-from 41.26
+from 59.13
 */
 
 const express = require('express');
