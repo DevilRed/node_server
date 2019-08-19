@@ -37,6 +37,7 @@ router.post('/notes/new-note', async (req, res) => {
 		const newNote = new Note({title, description});
 		// console.log(newNote);
 		await newNote.save();
+		req.flash('success_msg', 'Note added successfully');
 		res.redirect('/notes');// express redirect to route
 	}
 });
@@ -52,11 +53,13 @@ router.put('/notes/edit-note/:id', async (req, res) => {
 	const { title, description } = req.body;
 	// id = req.params.id,  params data comes from URL
 	await Note.findByIdAndUpdate(req.params.id, { title, description });
+	req.flash('success_msg', 'Note updated successfully');
 	res.redirect('/notes');
 });
 
 router.delete('/notes/delete/:id', async (req, res) => {
 	await Note.findByIdAndDelete(req.params.id)
+	req.flash('success_msg', 'Note delete successfully');
 	res.redirect('/notes');
 });
 

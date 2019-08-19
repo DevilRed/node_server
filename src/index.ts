@@ -14,7 +14,7 @@ additional modules:
 * bcryptjs, hash password
 * connect-flash, for flash messages
 
-from 1.50.41
+from 2.03.00
 */
 
 const express = require('express');
@@ -23,6 +23,7 @@ const path = require('path');// package built-in in nodeJS
 const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');// allow html form use other html verbs, PUT, DELETE
 const session = require('express-session');
+const flash = require('connect-flash');// to show flash messages
 
 
 // server initializing
@@ -54,10 +55,17 @@ app.use(session({
 	saveUninitialized: true
 }));
 
+app.use(flash());
+
 
 
 // GLOBAL VARIALBLES
-
+// set global to make flash available for all views
+app.use((req, res, next) => {
+	res.locals.success_msg = req.flash('success_msg');
+	res.locals.error_msg = req.flash('error_msg');
+	next();// important to allow node process next operations
+});
 
 // ROUTES
 app.use(require('./routes/index'));
