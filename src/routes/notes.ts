@@ -41,4 +41,18 @@ router.post('/notes/new-note', async (req, res) => {
 	}
 });
 
+router.get('/notes/edit/:id', async (req, res) => {
+	// get the note
+	const note = await Note.findById(req.params.id);
+	res.render('notes/edit-note', {note});
+});
+
+// expect a PUT request
+router.put('/notes/edit-note/:id', async (req, res) => {
+	const { title, description } = req.body;
+	// id = req.params.id,  params data comes from URL
+	await Note.findByIdAndUpdate(req.params.id, { title, description });
+	res.redirect('/notes');
+});
+
 module.exports = router;
