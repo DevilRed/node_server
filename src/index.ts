@@ -14,7 +14,7 @@ additional modules:
 * bcryptjs, hash password
 * connect-flash, for flash messages
 
-from 2.03.30
+from 2.51.50
 */
 
 const express = require('express');
@@ -24,11 +24,13 @@ const exphbs = require('express-handlebars');
 const methodOverride = require('method-override');// allow html form use other html verbs, PUT, DELETE
 const session = require('express-session');
 const flash = require('connect-flash');// to show flash messages
+const passport = require('passport');
 
 
 // server initializing
 const app = express();
 require('./database');
+require('./config/passport');
 
 // SETTINGS
 app.set('port', process.env.PORT || 3000);
@@ -55,6 +57,10 @@ app.use(session({
 	saveUninitialized: true
 }));
 
+// passport has to be after session and before flash
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(flash());
 
 
@@ -64,6 +70,9 @@ app.use(flash());
 app.use((req, res, next) => {
 	res.locals.success_msg = req.flash('success_msg');
 	res.locals.error_msg = req.flash('error_msg');
+	// add global variable for passport
+	res.locals.error = req.flash('error');
+
 	next();// important to allow node process next operations
 });
 
