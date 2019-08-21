@@ -14,7 +14,7 @@ additional modules:
 * bcryptjs, hash password
 * connect-flash, for flash messages
 
-from 2.51.50
+from 3.12.40
 */
 
 const express = require('express');
@@ -72,6 +72,8 @@ app.use((req, res, next) => {
 	res.locals.error_msg = req.flash('error_msg');
 	// add global variable for passport
 	res.locals.error = req.flash('error');
+	// passport saves user who logs in
+	res.locals.user = req.user || null;
 
 	next();// important to allow node process next operations
 });

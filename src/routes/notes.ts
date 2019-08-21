@@ -2,6 +2,8 @@ const router = require('express').Router();
 
 // models, bring Note schema, it allows to interact with the DB
 const Note = require('../models/Note');
+// get middleware
+const { isAuthenticated } = require('../helpers/auth');
 
 // index
 router.get('/notes', async (req, res) => {
@@ -12,11 +14,13 @@ router.get('/notes', async (req, res) => {
 	res.render('notes/all-notes', { notes })
 });
 
-router.get('/notes/add', (req, res) => {
+// use custom middleware by: adding it to the route after the route name and before any other process
+router.get('/notes/add', isAuthenticated, (req, res) => {
 	res.render('notes/new-note');
 });
 
-router.post('/notes/new-note', async (req, res) => {
+// add middleware
+router.post('/notes/new-note', isAuthenticated, async (req, res) => {
 	// console.log(req.body);
 	const { title, description } = req.body;
 	// validating data
@@ -42,7 +46,7 @@ router.post('/notes/new-note', async (req, res) => {
 	}
 });
 
-router.get('/notes/edit/:id', async (req, res) => {
+router.get('/notes/edit/:id', isAuthenticated, async (req, res) => {
 	// get the note
 	const note = await Note.findById(req.params.id);
 	res.render('notes/edit-note', {note});

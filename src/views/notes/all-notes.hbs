@@ -18,6 +18,7 @@
 		</div>
 		{{else}}
 			<div class="card mx-auto">
+				<h1>Hello {{ user.name }}</h1>{{!-- TO DO: greet user with better approach --}}
 				<div class="card-body">
 					<p class="lead">No notes still</p>
 					<a href="/notes/add" class="btn btn-success btn-block">Create one</a>
