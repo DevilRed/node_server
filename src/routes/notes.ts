@@ -8,7 +8,7 @@ const { isAuthenticated } = require('../helpers/auth');
 // index
 router.get('/notes', async (req, res) => {
 	const notes = await Note
-		.find()// add to .find ({params}) for get specific data
+		.find({user: req.user.id})// add to .find ({params}) for get specific data
 		.sort({date: 'desc'})// sort results
 		;
 	res.render('notes/all-notes', { notes })
@@ -39,7 +39,7 @@ router.post('/notes/new-note', isAuthenticated, async (req, res) => {
 		});
 	} else {
 		const newNote = new Note({title, description});
-		// console.log(newNote);
+		newNote.user = req.user.id;// get the user from global variables
 		await newNote.save();
 		req.flash('success_msg', 'Note added successfully');
 		res.redirect('/notes');// express redirect to route

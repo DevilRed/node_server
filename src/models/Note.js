@@ -5,7 +5,8 @@ const { Schema } = mongoose;
 const NoteSchema = new Schema({
 	title: { type: String, required: true},
 	description: { type: String, required: true},
-	date: { type: Date, default: Date.now}// mongoDB timestamp
+	date: { type: Date, default: Date.now},// mongoDB timestamp
+	user: { type: String }// placeholder for the user id
 });
 
 // export schema using mongoose
